@@ -94,6 +94,10 @@ class Trainer():
         self.current_pokemon.attack(other_trainer.current_pokemon)
 
     def switch_pokemon(self, pokemon_index):
+        if self.pokemon[pokemon_index].unconcious is True:
+            print("{trainer} cannot send out {new_pokemon} because they are unconcious".format(
+            trainer=self.name, new_pokemon=self.pokemon[pokemon_index].name))
+            return
         print("{trainer} has recalled {prev_pokemon}. {trainer} has sent out {new_pokemon}!".format(
             trainer=self.name, prev_pokemon=self.current_pokemon.name, new_pokemon=self.pokemon[pokemon_index].name))
         self.current_pokemon = self.pokemon[pokemon_index]
@@ -116,7 +120,7 @@ misty = Trainer("Misty", [starme, squirtle], 3, 0)
 #squirtle.attack(charmander)
 #bulbasour.attack(pika)
 #charmander.attack(squirtle)
-
+bulbasour.lose_health(50)
 #ash.use_potion()
 ash.attack_trainer(misty)
 misty.switch_pokemon(1)
