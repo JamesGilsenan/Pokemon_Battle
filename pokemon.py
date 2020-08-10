@@ -16,7 +16,11 @@ class Pokemon:
             print("{name} has taken {dmg} damage and is unable to continue".format(name=self.name, dmg = damage))
         else:
             print("{name} has taken {dmg} damage".format(name=self.name, dmg=damage))
-        
+    
+    def regain_health(self, heal):
+        self.current_hp += heal
+        print("{name} was healed by {health} hp".format(name=self.name, health=heal))
 
 pika = Pokemon("Pikachu", 1, "electric", 20, 20, False)
 pika.lose_health(10)
+pika.regain_health(5)
