@@ -90,20 +90,36 @@ class Trainer():
         self.potions -= 1
         self.current_pokemon.regain_health(10)
 
+    def attack_trainer(self, other_trainer):
+        self.current_pokemon.attack(other_trainer.current_pokemon)
+
+    def switch_pokemon(self, pokemon_index):
+        print("{trainer} has recalled {prev_pokemon}. {trainer} has sent out {new_pokemon}!".format(
+            trainer=self.name, prev_pokemon=self.current_pokemon.name, new_pokemon=self.pokemon[pokemon_index].name))
+        self.current_pokemon = self.pokemon[pokemon_index]
+
+
+
 
 pika = Pokemon("Pikachu", 2, "Electric", 20, 20)
 squirtle = Pokemon("Squirtle", 1, "Water", 15, 15)
 bulbasour = Pokemon("Bulbasour", 3, "Grass", 30, 30)
 charmander = Pokemon("Charmander", 4, "fire", 35, 35)
-ash = Trainer("Ash", [pika, charmander, bulbasour], 0, 0)
+starme = Pokemon("Starme", 3, "water", 30, 30)
+ash = Trainer("Ash", [pika, charmander, bulbasour], 3, 0)
+misty = Trainer("Misty", [starme, squirtle], 3, 0)
 
 #pika.lose_health(25)
 #pika.regain_health(5)
 #pika.revive(50)
-pika.attack(squirtle)
+#pika.attack(squirtle)
 #squirtle.attack(charmander)
 #bulbasour.attack(pika)
 #charmander.attack(squirtle)
 
-ash.use_potion()
-
+#ash.use_potion()
+ash.attack_trainer(misty)
+misty.switch_pokemon(1)
+misty.attack_trainer(ash)
+ash.attack_trainer(misty)
+ash.switch_pokemon(2)
