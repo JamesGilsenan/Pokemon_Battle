@@ -77,6 +77,15 @@ class Pokemon:
             other_pokemon.lose_health(self.level)
 
 
+class Trainer():
+    def __init__(self, name, pokemon, potions, current_pokemon=0):
+        self.name = name
+        self. pokemon = pokemon
+        self.potions = 3
+        self.current_pokemon = pokemon[0]
+        
+
+
 pika = Pokemon("Pikachu", 2, "Electric", 20, 20)
 squirtle = Pokemon("Squirtle", 1, "Water", 15, 15)
 bulbasour = Pokemon("Bulbasour", 3, "Grass", 30, 30)
