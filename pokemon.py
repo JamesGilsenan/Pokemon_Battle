@@ -1,11 +1,11 @@
 class Pokemon:
-    def __init__(self, name, level, type, max_hp, current_hp, unconcious = False):
+    def __init__(self, name, level, type, max_hp, current_hp):
         self.name = name
         self.level = level
-        self.type = type
+        self.type = type.lower()
         self.max_hp = max_hp
         self.current_hp = max_hp
-        self.unconcious = unconcious
+        self.unconcious = False
 
     def lose_health(self, damage
     ):
@@ -43,8 +43,48 @@ class Pokemon:
             self.current_hp = health
         print("{name} was revived. They now have {hp} hp".format(name=self.name, hp=self.current_hp))
 
+    def attack(self, other_pokemon):
+        if self.unconcious is True:
+            print("{name} cannot attack because they are unconcious".format(name=self.name))
+            return
+        elif other_pokemon.unconcious is True:
+            print("Cannot attack {name} because they are unconcious".format(name=other_pokemon.name))
+            return
 
-pika = Pokemon("Pikachu", 1, "electric", 20, 20, False)
-pika.lose_health(25)
-pika.regain_health(5)
-pika.revive(50)
+        effective_attack = ""
+        #Attacking pokemon has advantage based on type
+        if self.type == "fire" and other_pokemon.type == "grass":
+            effective_attack = "yes"
+        elif self.type == "electric" and other_pokemon.type == "water":
+            effective_attack = "yes"
+        elif self.type == "water" and other_pokemon.type == "fire":
+            effective_attack = "yes"
+        #Attacking pokemon has disadvantage
+        elif self.type == "water" and other_pokemon.type == "electric":
+            effective_attack = "no"
+        elif self.type == "grass" and other_pokemon.type == "fire":
+            effective_attack = "no"
+        elif self.type == "fire" and other_pokemon.type == "water":
+            effective_attack = "no"
+            
+        if effective_attack == "yes": 
+            other_pokemon.lose_health(self.level * 2)
+            print("{name}'s attack was super effective".format(name=self.name))
+        elif effective_attack == "no":
+            other_pokemon.lose_health(self.level * 0.5)
+            print("{name}'s attack wasn't very effective".format(name=self.name))
+        else:
+            other_pokemon.lose_health(self.level)
+
+
+pika = Pokemon("Pikachu", 2, "Electric", 20, 20)
+squirtle = Pokemon("Squirtle", 1, "Water", 15, 15)
+bulbasour = Pokemon("Bulbasour", 3, "Grass", 30, 30)
+charmander = Pokemon("Charmander", 4, "fire", 35, 35)
+#pika.lose_health(25)
+#pika.regain_health(5)
+#pika.revive(50)
+pika.attack(squirtle)
+squirtle.attack(charmander)
+bulbasour.attack(pika)
+charmander.attack(squirtle)
