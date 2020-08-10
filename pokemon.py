@@ -28,13 +28,23 @@ class Pokemon:
     def regain_health(self, heal):
         if self.unconcious is False:
             self.current_hp += heal
+            if self.current_hp < self.max_hp:
+                self.current_hp = self.max_hp
             print("{name} was healed by {health} hp. They now have {hp} hp".format(name=self.name, health=heal, 
             hp=self.current_hp))
         else:
             print("Cannot heal {name}. They are unconcious".format(name=self.name))
 
-    
+    def revive(self, health):
+        if health >= self.max_hp:
+            self.current_hp = self.max_hp
+            self.unconcious = False
+        else:
+            self.current_hp = health
+        print("{name} was revived. They now have {hp} hp".format(name=self.name, hp=self.current_hp))
+
 
 pika = Pokemon("Pikachu", 1, "electric", 20, 20, False)
 pika.lose_health(25)
 pika.regain_health(5)
+pika.revive(50)
