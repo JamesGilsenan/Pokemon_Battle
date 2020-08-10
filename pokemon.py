@@ -28,7 +28,7 @@ class Pokemon:
     def regain_health(self, heal):
         if self.unconcious is False:
             self.current_hp += heal
-            if self.current_hp < self.max_hp:
+            if self.current_hp > self.max_hp:
                 self.current_hp = self.max_hp
             print("{name} was healed by {health} hp. They now have {hp} hp".format(name=self.name, health=heal, 
             hp=self.current_hp))
@@ -78,22 +78,32 @@ class Pokemon:
 
 
 class Trainer():
-    def __init__(self, name, pokemon, potions, current_pokemon=0):
+    def __init__(self, name, pokemon, potions=3, current_pokemon=0):
         self.name = name
         self. pokemon = pokemon
         self.potions = 3
         self.current_pokemon = pokemon[0]
         
+    def use_potion(self):
+        if self.potions <= 0:
+            print("{name} has no potions to use".format(name=self.name))
+        self.potions -= 1
+        self.current_pokemon.regain_health(10)
 
 
 pika = Pokemon("Pikachu", 2, "Electric", 20, 20)
 squirtle = Pokemon("Squirtle", 1, "Water", 15, 15)
 bulbasour = Pokemon("Bulbasour", 3, "Grass", 30, 30)
 charmander = Pokemon("Charmander", 4, "fire", 35, 35)
+ash = Trainer("Ash", [pika, charmander, bulbasour], 0, 0)
+
 #pika.lose_health(25)
 #pika.regain_health(5)
 #pika.revive(50)
 pika.attack(squirtle)
-squirtle.attack(charmander)
-bulbasour.attack(pika)
-charmander.attack(squirtle)
+#squirtle.attack(charmander)
+#bulbasour.attack(pika)
+#charmander.attack(squirtle)
+
+ash.use_potion()
+
