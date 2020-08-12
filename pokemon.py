@@ -17,6 +17,7 @@ class Pokemon:
         else:
             print("{name} has taken {dmg} damage. They now have {hp} hp".format(name=self.name, dmg=damage,
              hp=self.current_hp))
+        return self.unconcious
     
     def regain_health(self, heal):
         if self.unconcious is False and self.current_hp < self.max_hp:
@@ -70,16 +71,20 @@ class Pokemon:
             effective_attack = "no"
             
         if effective_attack == "yes": 
-            other_pokemon.lose_health(self.level * 2)
-            print("{name}'s attack was super effective".format(name=self.name))
+            if other_pokemon.lose_health(self.level * 2) is True:
+                self.gain_xp(other_pokemon.level)
+            print("{name}'s attack was super effective".format(name=self.name))            
         elif effective_attack == "no":
-            other_pokemon.lose_health(self.level * 0.5)
+            if other_pokemon.lose_health(self.level * 0.5) is True:
+                self.gain_xp(other_pokemon.level)
             print("{name}'s attack wasn't very effective".format(name=self.name))
         else:
-            other_pokemon.lose_health(self.level)
-            #if other_pokemon.lose_health == True:
-            #    self.xp += other_pokemon.level
-            #    print("{pokemon} gained {xp} xp".format(pokemon=self.name, xp=self.xp))        
+            if other_pokemon.lose_health(self.level) is True:
+                self.gain_xp(other_pokemon.level)
+    
+    def gain_xp(self, other_pokemon_level):
+        self.xp += other_pokemon_level
+        print("{pokemon} gained {xp} xp".format(pokemon=self.name, xp=self.xp))
 
 
 class Trainer():
@@ -111,17 +116,25 @@ class Trainer():
 
 
 pika = Pokemon("Pikachu", 2, "Electric")
-#squirtle = Pokemon("Squirtle", 1, "Water", 15, 15)
-#bulbasour = Pokemon("Bulbasour", 3, "Grass", 30, 30)
-#charmander = Pokemon("Charmander", 4, "fire", 35, 35)
+squirtle = Pokemon("Squirtle", 1, "Water")
+bulbasour = Pokemon("Bulbasour", 3, "Grass")
+charmander = Pokemon("Charmander", 4, "fire")
 starme = Pokemon("Starme", 3, "water")
 #ash = Trainer("Ash", [pika, charmander, bulbasour], 3, 0)
 #misty = Trainer("Misty", [starme, squirtle], 3, 0)
 ash = Trainer("Ash", [pika], 3, 0)
 misty = Trainer("Misty", [starme], 3, 0)
 
-pika.lose_health(5)
-pika.revive(pika.max_hp)
+
+#pika.attack(starme)
+#pika.attack(starme)
+#pika.attack(bulbasour)
+#pika.attack(bulbasour)
+#pika.attack(bulbasour)
+charmander.attack(squirtle)
+charmander.attack(squirtle)
+charmander.attack(squirtle)
+charmander.attack(squirtle)
 #pika.revive(50)
 #pika.attack(squirtle)
 #squirtle.attack(charmander)
