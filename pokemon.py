@@ -53,34 +53,34 @@ class Pokemon:
         elif other_pokemon.unconcious is True:
             print("Cannot attack {name} because they are unconcious".format(name=other_pokemon.name))
             return
-
-        effective_attack = ""
-        #Attacking pokemon has advantage based on type
-        if self.type == "fire" and other_pokemon.type == "grass":
-            effective_attack = "yes"
-        elif self.type == "electric" and other_pokemon.type == "water":
-            effective_attack = "yes"
-        elif self.type == "water" and other_pokemon.type == "fire":
-            effective_attack = "yes"
-        #Attacking pokemon has disadvantage
-        elif self.type == "water" and other_pokemon.type == "electric":
-            effective_attack = "no"
-        elif self.type == "grass" and other_pokemon.type == "fire":
-            effective_attack = "no"
-        elif self.type == "fire" and other_pokemon.type == "water":
-            effective_attack = "no"
             
-        if effective_attack == "yes": 
+        if self.have_advantage(other_pokemon.type) == "yes": 
             if other_pokemon.lose_health(self.level * 2) is True:
                 self.gain_xp(other_pokemon.level)
             print("{name}'s attack was super effective".format(name=self.name))            
-        elif effective_attack == "no":
+        elif self.have_advantage(other_pokemon.type) == "no":
             if other_pokemon.lose_health(self.level * 0.5) is True:
                 self.gain_xp(other_pokemon.level)
             print("{name}'s attack wasn't very effective".format(name=self.name))
         else:
             if other_pokemon.lose_health(self.level) is True:
                 self.gain_xp(other_pokemon.level)
+
+    def have_advantage(self, other_pokemon_type):
+        #Attacking pokemon has advantage based on type
+        if self.type == "fire" and other_pokemon_type == "grass":
+            return "yes"
+        elif self.type == "electric" and other_pokemon_type == "water":
+            return "yes"
+        elif self.type == "water" and other_pokemon_type == "fire":
+            return "yes"
+        #Attacking pokemon has disadvantage
+        elif self.type == "water" and other_pokemon_type == "electric":
+            return "no"
+        elif self.type == "grass" and other_pokemon_type == "fire":
+            return "no"
+        elif self.type == "fire" and other_pokemon_type == "water":
+            return "no"
     
     def gain_xp(self, other_pokemon_level):
         self.xp += other_pokemon_level
