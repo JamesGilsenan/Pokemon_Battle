@@ -7,6 +7,7 @@ class Pokemon:
         self.current_hp = self.max_hp
         self.unconcious = False
         self.xp = 0
+        self.xp_cap = level * 2
 
     def lose_health(self, damage):
         self.current_hp -= damage
@@ -86,6 +87,15 @@ class Pokemon:
     def gain_xp(self, other_pokemon_level):
         self.xp += other_pokemon_level
         print("{pokemon} gained {xp} xp".format(pokemon=self.name, xp=other_pokemon_level))
+        self.level_up()
+
+    def level_up(self):
+        if self.xp >= self.xp_cap:
+            self.level += 1
+            self.xp -= self.xp_cap
+            self.xp_cap = self.level * 2
+            print("* {pokemon} leveled up! * They are now level {lvl}. XP test = {xp}".format(pokemon=self.name,
+            lvl=self.level, xp=self.xp))           
 
 
 class Trainer():
@@ -130,10 +140,20 @@ squirtle = Pokemon("Squirtle", 1, "Water")
 bulbasour = Pokemon("Bulbasour", 3, "Grass")
 charmander = Pokemon("Charmander", 4, "fire")
 starme = Pokemon("Starme", 3, "water")
+starme2 = Pokemon("Starme", 3, "water")
+starme3 = Pokemon("Starme", 3, "water")
+starme4 = Pokemon("Starme", 3, "water")
+starme5 = Pokemon("Starme", 3, "water")
+starme6 = Pokemon("Starme", 3, "water")
+starme7 = Pokemon("Starme", 3, "water")
+starme8 = Pokemon("Starme", 3, "water")
+starme9 = Pokemon("Starme", 3, "water")
+starme10 = Pokemon("Starme", 3, "water")
 #ash = Trainer("Ash", [pika, charmander, bulbasour], 3, 0)
 #misty = Trainer("Misty", [starme, squirtle], 3, 0)
 ash = Trainer("Ash", [pika, bulbasour], 3, 0)
-misty = Trainer("Misty", [starme, squirtle], 3, 0)
+misty = Trainer("Misty", [starme, squirtle, starme2, starme3, starme4, starme5, starme6, starme7, starme8,
+starme9, starme10], 3, 0)
 
 
 #pika.attack(starme)
@@ -153,7 +173,7 @@ misty = Trainer("Misty", [starme, squirtle], 3, 0)
 #ash.use_potion()
 #misty.attack_trainer(ash)
 #ash.switch_pokemon(2)
-ash.attack_trainer(misty)
-ash.attack_trainer(misty)
-misty.switch_pokemon(1)
-ash.attack_trainer(misty)
+for i in range(len(misty.pokemon) - 1):
+    ash.attack_trainer(misty)
+    ash.attack_trainer(misty)
+    misty.switch_pokemon(i + 1)
