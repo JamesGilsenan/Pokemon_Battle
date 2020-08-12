@@ -65,6 +65,7 @@ class Pokemon:
         else:
             if other_pokemon.lose_health(self.level) is True:
                 self.gain_xp(other_pokemon.level)
+        return other_pokemon.unconcious
 
     def have_advantage(self, other_pokemon_type):
         #Attacking pokemon has advantage based on type
@@ -84,7 +85,7 @@ class Pokemon:
     
     def gain_xp(self, other_pokemon_level):
         self.xp += other_pokemon_level
-        print("{pokemon} gained {xp} xp".format(pokemon=self.name, xp=self.xp))
+        print("{pokemon} gained {xp} xp".format(pokemon=self.name, xp=other_pokemon_level))
 
 
 class Trainer():
@@ -102,6 +103,7 @@ class Trainer():
 
     def attack_trainer(self, other_trainer):
         self.current_pokemon.attack(other_trainer.current_pokemon)
+        self.did_win(other_trainer)
 
     def switch_pokemon(self, pokemon_index):
         if self.pokemon[pokemon_index].unconcious is True:
@@ -112,6 +114,14 @@ class Trainer():
             trainer=self.name, prev_pokemon=self.current_pokemon.name, new_pokemon=self.pokemon[pokemon_index].name))
         self.current_pokemon = self.pokemon[pokemon_index]
 
+    def did_win(self, other_trainer):
+        unconcious_count = 0
+        for monster in other_trainer.pokemon:
+            if monster.unconcious is True:
+                unconcious_count += 1
+        if unconcious_count == len(other_trainer.pokemon):
+            print("{opp_trainer} has no more Pokemon to send out...".format(opp_trainer=other_trainer.name))
+            print("** {name} wins the pokemon battle! **".format(name=self.name))
 
 
 
@@ -122,8 +132,8 @@ charmander = Pokemon("Charmander", 4, "fire")
 starme = Pokemon("Starme", 3, "water")
 #ash = Trainer("Ash", [pika, charmander, bulbasour], 3, 0)
 #misty = Trainer("Misty", [starme, squirtle], 3, 0)
-ash = Trainer("Ash", [pika], 3, 0)
-misty = Trainer("Misty", [starme], 3, 0)
+ash = Trainer("Ash", [pika, bulbasour], 3, 0)
+misty = Trainer("Misty", [starme, squirtle], 3, 0)
 
 
 #pika.attack(starme)
@@ -131,10 +141,9 @@ misty = Trainer("Misty", [starme], 3, 0)
 #pika.attack(bulbasour)
 #pika.attack(bulbasour)
 #pika.attack(bulbasour)
-charmander.attack(squirtle)
-charmander.attack(squirtle)
-charmander.attack(squirtle)
-charmander.attack(squirtle)
+#charmander.attack(squirtle)
+#charmander.attack(squirtle)
+
 #pika.revive(50)
 #pika.attack(squirtle)
 #squirtle.attack(charmander)
@@ -142,9 +151,9 @@ charmander.attack(squirtle)
 #charmander.attack(squirtle)
 #bulbasour.lose_health(50)
 #ash.use_potion()
-#ash.attack_trainer(misty)
-#misty.switch_pokemon(1)
 #misty.attack_trainer(ash)
-#ash.attack_trainer(misty)
 #ash.switch_pokemon(2)
-
+ash.attack_trainer(misty)
+ash.attack_trainer(misty)
+misty.switch_pokemon(1)
+ash.attack_trainer(misty)
