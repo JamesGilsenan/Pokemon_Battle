@@ -104,7 +104,7 @@ class Pokemon:
 
     def evolve(self):
         evolution_names = {"Pichu": ["Pikachu", "Raichu"], "Charmander": ["Charmeleon", "Charizard"], 
-"Squirtle": ["Wartortle", "Blastoise"], "Bulbasaur": ["Ivysaur", "Venusaur"], "Staryu": "Starmie"}
+"Squirtle": ["Wartortle", "Blastoise"], "Bulbasaur": ["Ivysaur", "Venusaur"], "Staryu": ["Starmie"]}
             
         for first_evo, next_evos in evolution_names.items():
             if self.name == next_evos[len(next_evos) -1]:
@@ -125,6 +125,11 @@ class Pokemon:
             self.xp_cap = self.level * 2
         print("They have evolved into a level {lvl} {pokemon}!".format(lvl=self.level, pokemon=self.name))
 
+
+class Pikachu(Pokemon):
+    def __repr__(self):
+        return super().__repr__() + " -Strong against Water type Pokemon \n -Weak against Ground type Pokemon"
+         
 
 class Trainer():
     def __init__(self, name, pokemon, potions=3, current_pokemon=0):
@@ -163,8 +168,8 @@ class Trainer():
 
 
 opponent_level = 8
-#pika = Pikachu("Pikachu", 2, "Electric")
-pika = Pokemon("Pichu", 2, "Electric")
+pikachu = Pikachu("Pikachu", 2, "Electric")
+pika = Pokemon("Pichu", 5, "Electric")
 squirtle = Pokemon("Squirtle", 1, "Water")
 bulbasaur = Pokemon("Bulbasaur", 3, "Grass")
 charmander = Pokemon("Charmander", 4, "fire")
@@ -179,8 +184,8 @@ starmie8 = Pokemon("Starmie", opponent_level, "water")
 starmie9 = Pokemon("Starmie", opponent_level, "water")
 starmie10 = Pokemon("Starmie", opponent_level, "water")
 
-#ash = Trainer("Ash", [pika, charmander, bulbasaur], 3, 0)
-#misty = Trainer("Misty", [starmie, squirtle], 3, 0)
+staryu = Pokemon("Staryu", 5, "water")
+misty_2 = Trainer("Misty", [staryu], 3, 0)
 
 ash = Trainer("Ash", [pika, bulbasaur], 3, 0)
 misty = Trainer("Misty", [starmie, squirtle, starmie2, starmie3, starmie4, starmie5, starmie6, starmie7, starmie8,
@@ -189,26 +194,10 @@ starmie9, starmie10], 3, 0)
 test_trainer_1 = ash
 test_trainer_2 = misty
 
-#pika.attack(starmie)
-#pika.attack(starmie)
-#pika.attack(bulbasaur)
-#pika.attack(bulbasaur)
-#pika.attack(bulbasaur)
-#charmander.attack(squirtle)
-#charmander.attack(squirtle)
-
-#pika.revive(50)
-#pika.attack(squirtle)
-#squirtle.attack(charmander)
-#bulbasaur.attack(pika)
-#charmander.attack(squirtle)
-#bulbasaur.lose_health(50)
-#ash.use_potion()
-#misty.attack_trainer(ash)
-#ash.switch_pokemon(2)
 #for i in range(len(test_trainer_2.pokemon) - 1):
     #test_trainer_1.attack_trainer(test_trainer_2)
     #test_trainer_1.attack_trainer(test_trainer_2)
     #test_trainer_1.attack_trainer(test_trainer_2)
     #test_trainer_2.switch_pokemon(i + 1)
-print(pika)
+
+print(pikachu)
