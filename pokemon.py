@@ -1,13 +1,17 @@
+from random import randint
 class Pokemon:
     def __init__(self, name, level, type):
         self.name = name
         self.level = level
         self.type = type.lower()
-        self.max_hp = level + 3
+        self.max_hp = (level + 3) * 3
         self.current_hp = self.max_hp
         self.unconcious = False
         self.xp = 0
         self.xp_cap = level * 2
+        self.speed_stat = randint(8, 12) + self.level
+        self.attack_stat = randint(5, 7) + self.level
+        self.defense_stat = randint(1, 3) + self.level
 
     def __repr__(self):
         return "--Pokedex Information on {pokemon}--\n -Level: {lvl} \t-Type: {type} \t-Health: {currhp}/{maxhp} \t-XP: {xp}/{reqxp}\n".format(
@@ -67,15 +71,15 @@ class Pokemon:
             return
             
         if self.have_advantage(other_pokemon.type) == "yes": 
-            if other_pokemon.lose_health(self.level * 2) is True:
+            if other_pokemon.lose_health((self.attack_stat - self.defense_stat) * 2) is True:
                 self.gain_xp(other_pokemon.level)
             print("{name}'s attack was super effective".format(name=self.name))            
         elif self.have_advantage(other_pokemon.type) == "no":
-            if other_pokemon.lose_health(self.level * 0.5) is True:
+            if other_pokemon.lose_health((self.attack_stat - other_pokemon.defense_stat) * 0.5) is True:
                 self.gain_xp(other_pokemon.level)
             print("{name}'s attack wasn't very effective".format(name=self.name))
         else:
-            if other_pokemon.lose_health(self.level) is True:
+            if other_pokemon.lose_health(self.attack_stat - other_pokemon.defense_stat) is True:
                 self.gain_xp(other_pokemon.level)
         return other_pokemon.unconcious
 
@@ -141,7 +145,7 @@ class Pikachu(Pokemon):
             return
 
         print("{pokemon} used Quick Attack".format(pokemon=self.name))
-        if other_pokemon.lose_health(self.level * 2) is True:
+        if other_pokemon.lose_health(self.attack_stat - other_pokemon.defense_stat) is True:
             self.gain_xp(other_pokemon.level)
 
 
@@ -181,10 +185,10 @@ class Trainer():
             print("** {name} wins the pokemon battle! **".format(name=self.name))
 
 
-opponent_level = 8
+opponent_level = 3
 pikachu = Pikachu("Pikachu", 2, "Electric")
-pika = Pokemon("Pichu", 5, "Electric")
-squirtle = Pokemon("Squirtle", 1, "Water")
+pika = Pokemon("Pichu", 2, "Electric")
+squirtle = Pokemon("Squirtle", 3, "Water")
 bulbasaur = Pokemon("Bulbasaur", 3, "Grass")
 charmander = Pokemon("Charmander", 4, "fire")
 starmie = Pokemon("Starmie", opponent_level, "water")
@@ -198,8 +202,7 @@ starmie8 = Pokemon("Starmie", opponent_level, "water")
 starmie9 = Pokemon("Starmie", opponent_level, "water")
 starmie10 = Pokemon("Starmie", opponent_level, "water")
 
-staryu = Pokemon("Staryu", 5, "water")
-misty_2 = Trainer("Misty", [staryu], 3, 0)
+staryu = Pokemon("Staryu", 2, "water")
 
 ash = Trainer("Ash", [pika, bulbasaur], 3, 0)
 misty = Trainer("Misty", [starmie, squirtle, starmie2, starmie3, starmie4, starmie5, starmie6, starmie7, starmie8,
@@ -207,12 +210,12 @@ starmie9, starmie10], 3, 0)
 
 test_trainer_1 = ash
 test_trainer_2 = misty
+test_pokemon_1= squirtle
+test_pokemon_2 = staryu
 
-#for i in range(len(test_trainer_2.pokemon) - 1):
-    #test_trainer_1.attack_trainer(test_trainer_2)
-    #test_trainer_1.attack_trainer(test_trainer_2)
-    #test_trainer_1.attack_trainer(test_trainer_2)
-    #test_trainer_2.switch_pokemon(i + 1)
+print("{name}: Spd {spd}: \tAtk: {atk}\t\tDef: {defense}".format(name=test_pokemon_1.name, 
+spd=test_pokemon_1.speed_stat, atk=test_pokemon_1.attack_stat, defense=test_pokemon_1.defense_stat))
+print("{name}: Spd {spd}: \tAtk: {atk}\t\tDef: {defense}".format(name=test_pokemon_2.name, 
+spd=test_pokemon_2.speed_stat, atk=test_pokemon_2.attack_stat, defense=test_pokemon_2.defense_stat))
 
-#pikachu.lose_health(30)
-pikachu.quick_attack(staryu)
+test_pokemon_1.attack(test_pokemon_2)
