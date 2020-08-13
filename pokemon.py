@@ -52,12 +52,18 @@ class Pokemon:
         else:
             return self.current_hp
 
-    def attack(self, other_pokemon):
+    def can_attack(self, other_pokemon):
         if self.unconcious is True:
             print("{name} cannot attack because they are unconcious".format(name=self.name))
-            return
+            return False
         elif other_pokemon.unconcious is True:
             print("Cannot attack {name} because they are unconcious".format(name=other_pokemon.name))
+            return False
+        else:
+            return True
+
+    def attack(self, other_pokemon):
+        if self.can_attack(other_pokemon) is False:
             return
             
         if self.have_advantage(other_pokemon.type) == "yes": 
@@ -130,6 +136,14 @@ class Pikachu(Pokemon):
     def __repr__(self):
         return super().__repr__() + " -Strong against Water type Pokemon \n -Weak against Ground type Pokemon"
          
+    def quick_attack(self, other_pokemon):
+        if self.can_attack(other_pokemon) is False:
+            return
+
+        print("{pokemon} used Quick Attack".format(pokemon=self.name))
+        if other_pokemon.lose_health(self.level * 2) is True:
+            self.gain_xp(other_pokemon.level)
+
 
 class Trainer():
     def __init__(self, name, pokemon, potions=3, current_pokemon=0):
@@ -200,4 +214,5 @@ test_trainer_2 = misty
     #test_trainer_1.attack_trainer(test_trainer_2)
     #test_trainer_2.switch_pokemon(i + 1)
 
-print(pikachu)
+#pikachu.lose_health(30)
+pikachu.quick_attack(staryu)
