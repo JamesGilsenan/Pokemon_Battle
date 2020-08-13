@@ -14,9 +14,11 @@ class Pokemon:
         self.defense_stat = randint(1, 3) + self.level
 
     def __repr__(self):
-        return "--Pokedex Information on {pokemon}--\n -Level: {lvl} \t-Type: {type} \t-Health: {currhp}/{maxhp} \t-XP: {xp}/{reqxp}\n".format(
+        return """--Pokedex Information on {pokemon}--
+ -Level: {lvl} \t-Type: {type} \t-Health: {currhp}/{maxhp} \t-XP: {xp}/{reqxp}
+ -Speed: {spd} \t-Attack: {atk} \t-Defense: {defense}""".format(
             pokemon=self.name, lvl=self.level, type=self.type, currhp=self.current_hp, maxhp=self.max_hp,
-            xp=self.xp, reqxp=self.xp_cap)
+            xp=self.xp, reqxp=self.xp_cap, spd=self.speed_stat, atk=self.attack_stat, defense=self.defense_stat)
 
     def lose_health(self, damage):
         self.current_hp -= damage
@@ -213,9 +215,9 @@ test_trainer_2 = misty
 test_pokemon_1= squirtle
 test_pokemon_2 = staryu
 
-print("{name}: Spd {spd}: \tAtk: {atk}\t\tDef: {defense}".format(name=test_pokemon_1.name, 
-spd=test_pokemon_1.speed_stat, atk=test_pokemon_1.attack_stat, defense=test_pokemon_1.defense_stat))
-print("{name}: Spd {spd}: \tAtk: {atk}\t\tDef: {defense}".format(name=test_pokemon_2.name, 
-spd=test_pokemon_2.speed_stat, atk=test_pokemon_2.attack_stat, defense=test_pokemon_2.defense_stat))
-
-test_pokemon_1.attack(test_pokemon_2)
+# print("{name}: Spd {spd}: \tAtk: {atk}\t\tDef: {defense}".format(name=test_pokemon_1.name, 
+# spd=test_pokemon_1.speed_stat, atk=test_pokemon_1.attack_stat, defense=test_pokemon_1.defense_stat))
+# print("{name}: Spd {spd}: \tAtk: {atk}\t\tDef: {defense}".format(name=test_pokemon_2.name, 
+# spd=test_pokemon_2.speed_stat, atk=test_pokemon_2.attack_stat, defense=test_pokemon_2.defense_stat))
+#test_pokemon_1.attack(test_pokemon_2)
+print(test_pokemon_1)
