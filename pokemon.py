@@ -9,6 +9,11 @@ class Pokemon:
         self.xp = 0
         self.xp_cap = level * 2
 
+    def __repr__(self):
+        return "--Pokedex Information on {pokemon}--\n -Level: {lvl} \t-Type: {type} \t-Health: {currhp}/{maxhp} \t-XP: {xp}/{reqxp}\n".format(
+            pokemon=self.name, lvl=self.level, type=self.type, currhp=self.current_hp, maxhp=self.max_hp,
+            xp=self.xp, reqxp=self.xp_cap)
+
     def lose_health(self, damage):
         self.current_hp -= damage
         if self.current_hp <= 0:
@@ -173,12 +178,16 @@ starmie7 = Pokemon("Starmie", opponent_level, "water")
 starmie8 = Pokemon("Starmie", opponent_level, "water")
 starmie9 = Pokemon("Starmie", opponent_level, "water")
 starmie10 = Pokemon("Starmie", opponent_level, "water")
+
 #ash = Trainer("Ash", [pika, charmander, bulbasaur], 3, 0)
 #misty = Trainer("Misty", [starmie, squirtle], 3, 0)
+
 ash = Trainer("Ash", [pika, bulbasaur], 3, 0)
 misty = Trainer("Misty", [starmie, squirtle, starmie2, starmie3, starmie4, starmie5, starmie6, starmie7, starmie8,
 starmie9, starmie10], 3, 0)
 
+test_trainer_1 = ash
+test_trainer_2 = misty
 
 #pika.attack(starmie)
 #pika.attack(starmie)
@@ -197,8 +206,9 @@ starmie9, starmie10], 3, 0)
 #ash.use_potion()
 #misty.attack_trainer(ash)
 #ash.switch_pokemon(2)
-for i in range(len(misty.pokemon) - 1):
-    ash.attack_trainer(misty)
-    ash.attack_trainer(misty)
-    ash.attack_trainer(misty)
-    misty.switch_pokemon(i + 1)
+#for i in range(len(test_trainer_2.pokemon) - 1):
+    #test_trainer_1.attack_trainer(test_trainer_2)
+    #test_trainer_1.attack_trainer(test_trainer_2)
+    #test_trainer_1.attack_trainer(test_trainer_2)
+    #test_trainer_2.switch_pokemon(i + 1)
+print(pika)
