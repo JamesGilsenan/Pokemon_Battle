@@ -125,18 +125,26 @@ class Pokemon:
                 print("...{pokemon} is evolving...".format(pokemon=self.name))
                 self.level = 2
                 self.name = next_evos[0]
-                self.max_hp = (self.level + 3) * 2
+                self.max_hp = (self.level + 3) * 4
             elif self.level >= 5 and self.name == next_evos[0]:
                 print("...{pokemon} is evolving...".format(pokemon=self.name))
                 self.level = 2
                 self.name = next_evos[1]
-                self.max_hp = (self.level + 3) * 3                
-            self.current_hp = self.max_hp
-            self.unconcious = False
-            self.xp = 0
-            self.xp_cap = self.level * 2
+                self.max_hp = (self.level + 3) * 5               
+        self.current_hp = self.max_hp
+        self.unconcious = False
+        self.xp = 0
+        self.xp_cap = self.level * 2
+        self.speed_stat += 3
+        self.attack_stat += 1
+        self.defense_stat += 1
         print("They have evolved into a level {lvl} {pokemon}!".format(lvl=self.level, pokemon=self.name))
 
+    def first_move(self, other_pokemon):
+        if self.speed_stat > other_pokemon.speed_stat:
+            print("{pokemon} has the first move!".format(pokemon=self.name))
+        else:
+            print("{other_pokemon} has the first move!".format(other_pokemon=other_pokemon.name))
 
 class Pikachu(Pokemon):
     def __repr__(self):
@@ -220,4 +228,14 @@ test_pokemon_2 = staryu
 # print("{name}: Spd {spd}: \tAtk: {atk}\t\tDef: {defense}".format(name=test_pokemon_2.name, 
 # spd=test_pokemon_2.speed_stat, atk=test_pokemon_2.attack_stat, defense=test_pokemon_2.defense_stat))
 #test_pokemon_1.attack(test_pokemon_2)
+print(test_pokemon_1)
+
+test_pokemon_1.level = 5
+
+print(test_pokemon_1)
+test_pokemon_1.evolve()
+print(test_pokemon_1)
+test_pokemon_1.level = 5
+print(test_pokemon_1)
+test_pokemon_1.evolve()
 print(test_pokemon_1)
