@@ -109,6 +109,7 @@ class Pokemon:
     def level_up(self):
         if self.xp >= self.xp_cap:
             self.level += 1
+            self.max_hp += 1
             self.xp -= self.xp_cap
             self.xp_cap = self.level * 2
             print("* {pokemon} leveled up! * They are now level {lvl}.".format(pokemon=self.name, lvl=self.level))           
@@ -125,12 +126,12 @@ class Pokemon:
                 print("...{pokemon} is evolving...".format(pokemon=self.name))
                 self.level = 2
                 self.name = next_evos[0]
-                self.max_hp = (self.level + 3) * 4
+                self.max_hp = (self.level + 4) * 4
             elif self.level >= 5 and self.name == next_evos[0]:
                 print("...{pokemon} is evolving...".format(pokemon=self.name))
                 self.level = 2
                 self.name = next_evos[1]
-                self.max_hp = (self.level + 3) * 5               
+                self.max_hp = (self.level + 4) * 5               
         self.current_hp = self.max_hp
         self.unconcious = False
         self.xp = 0
@@ -145,6 +146,7 @@ class Pokemon:
             print("{pokemon} has the first move!".format(pokemon=self.name))
         else:
             print("{other_pokemon} has the first move!".format(other_pokemon=other_pokemon.name))
+
 
 class Pikachu(Pokemon):
     def __repr__(self):
@@ -195,12 +197,17 @@ class Trainer():
             print("** {name} wins the pokemon battle! **".format(name=self.name))
 
 
+
+starting_level = 1
+pika = Pokemon("Pichu", starting_level, "Electric")
+squirtle = Pokemon("Squirtle", starting_level, "Water")
+bulbasaur = Pokemon("Bulbasaur", starting_level, "Grass")
+charmander = Pokemon("Charmander", starting_level, "fire")
+starmie = Pokemon("Starmie", starting_level, "water")
+starting_pokemon = [pika.name, squirtle.name, bulbasaur.name, charmander.name, starmie.name]
+"""
 opponent_level = 3
-pikachu = Pikachu("Pikachu", 2, "Electric")
-pika = Pokemon("Pichu", 2, "Electric")
-squirtle = Pokemon("Squirtle", 3, "Water")
-bulbasaur = Pokemon("Bulbasaur", 3, "Grass")
-charmander = Pokemon("Charmander", 4, "fire")
+pikachu = Pikachu("Pikachu", starting_level, "Electric")
 starmie = Pokemon("Starmie", opponent_level, "water")
 starmie2 = Pokemon("Starmie", opponent_level, "water")
 starmie3 = Pokemon("Starmie", opponent_level, "water")
@@ -238,4 +245,24 @@ print(test_pokemon_1)
 test_pokemon_1.level = 5
 print(test_pokemon_1)
 test_pokemon_1.evolve()
-print(test_pokemon_1)
+print(test_pokemon_1) """
+
+player1 = input("Enter Player 1's name: ")
+player2 = input("Enter player 2's name: ")
+player1, player2 = player1.capitalize(), player2.capitalize()
+print("Welcome Pokemon Trainers {p1} and {p2}".format(p1=player1, p2=player2))
+p1_pokemon = []
+p2_pokemon = []
+print("{p1}, please choose your 3 pokemon to form your squad: ".format(p1=player1))
+while len(p1_pokemon) < 3:
+    selection = input("Please choose a pokemon: {}".format(starting_pokemon)).lower().capitalize()
+    if selection in starting_pokemon:
+        index = starting_pokemon.index(selection)
+        p1_pokemon.append(starting_pokemon[index])
+        print("{} joined your squad".format(starting_pokemon[index]))
+        starting_pokemon.pop(index)
+    else:
+       print("Sorry, {user_input} is not a vaild pokemon selection".format(user_input=selection, starters=starting_pokemon))
+print(p1_pokemon)
+
+    
