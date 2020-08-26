@@ -147,6 +147,22 @@ class Pokemon:
         else:
             print("{other_pokemon} has the first move!".format(other_pokemon=other_pokemon.name))
 
+    def pokemon_selection(self, starting_pokemon, trainer_name):
+        pokemon_squad = []
+        display_pokemon = starting_pokemon.copy()
+        print("\n{}, please choose your 3 pokemon to form your squad: ".format(trainer_name))
+        while len(pokemon_squad) < 3:
+            selection = input("Please choose a pokemon: " + ", ".join(display_pokemon) + "\t").lower().capitalize()
+            if selection in display_pokemon:
+                index = display_pokemon.index(selection)
+                pokemon_squad.append(display_pokemon[index])
+                print("{} joined your squad".format(display_pokemon[index]))
+                display_pokemon.pop(index)
+            else:
+                print("Sorry, {user_input} is not a vaild pokemon selection".format(user_input=selection))
+        print("-> {name} your pokemon squad is: ".format(name=trainer_name) + ", ".join(pokemon_squad))
+        return pokemon_squad
+
 
 class Pikachu(Pokemon):
     def __repr__(self):
@@ -162,7 +178,7 @@ class Pikachu(Pokemon):
 
 
 class Trainer():
-    def __init__(self, name, pokemon, potions=3, current_pokemon=0):
+    def __init__(self, name, pokemon, current_pokemon=0):
         self.name = name
         self. pokemon = pokemon
         self.potions = 3
@@ -247,22 +263,10 @@ print(test_pokemon_1)
 test_pokemon_1.evolve()
 print(test_pokemon_1) """
 
-player1 = input("Enter Player 1's name: ")
-player2 = input("Enter player 2's name: ")
-player1, player2 = player1.capitalize(), player2.capitalize()
-print("Welcome Pokemon Trainers {p1} and {p2}".format(p1=player1, p2=player2))
-p1_pokemon = []
-p2_pokemon = []
-print("{p1}, please choose your 3 pokemon to form your squad: ".format(p1=player1))
-while len(p1_pokemon) < 3:
-    selection = input("Please choose a pokemon: {}".format(starting_pokemon)).lower().capitalize()
-    if selection in starting_pokemon:
-        index = starting_pokemon.index(selection)
-        p1_pokemon.append(starting_pokemon[index])
-        print("{} joined your squad".format(starting_pokemon[index]))
-        starting_pokemon.pop(index)
-    else:
-       print("Sorry, {user_input} is not a vaild pokemon selection".format(user_input=selection, starters=starting_pokemon))
-print(p1_pokemon)
+name_1 = input("Enter Player 1's name: ")
+name_2 = input("Enter player 2's name: ")
+print("Welcome Pokemon Trainers {p1} and {p2}".format(p1=name_1, p2=name_2))
+squad_1 = pika.pokemon_selection(starting_pokemon, name_1)
+squad_2 = pika.pokemon_selection(starting_pokemon, name_2)
 
     
