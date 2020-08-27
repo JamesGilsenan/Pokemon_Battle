@@ -150,9 +150,9 @@ class Pokemon:
     def pokemon_selection(self, starting_pokemon, trainer_name):
         pokemon_squad = []
         display_pokemon = starting_pokemon.copy()
-        print("\n{}, please choose your 3 pokemon to form your squad: ".format(trainer_name))
+        print("\n{}, please choose 3 pokemon to form your squad: ".format(trainer_name))
         while len(pokemon_squad) < 3:
-            selection = input("Please choose a pokemon: " + ", ".join(display_pokemon) + "\t").lower().capitalize()
+            selection = input("Please choose a pokemon: " + ", ".join(display_pokemon) + "   ").lower().capitalize()
             if selection in display_pokemon:
                 index = display_pokemon.index(selection)
                 pokemon_squad.append(display_pokemon[index])
@@ -162,6 +162,18 @@ class Pokemon:
                 print("Sorry, {user_input} is not a vaild pokemon selection".format(user_input=selection))
         print("-> {name} your pokemon squad is: ".format(name=trainer_name) + ", ".join(pokemon_squad))
         return pokemon_squad
+
+    def starting_pokemon_selection(self, trainer_name, squad):
+        starter = ""
+        while starter == "":
+            starter = input("{}, please choose your pokemon to start the battle: ".format(trainer_name) + ", ".join(
+                squad) + "   ").lower().capitalize()
+            if starter in squad:
+                index = squad.index(starter)
+            else:
+                print("Sorry, {user_input} is not a vaild pokemon selection".format(user_input=starter))
+                starter = ""
+        return index
 
 
 class Pikachu(Pokemon):
@@ -178,11 +190,11 @@ class Pikachu(Pokemon):
 
 
 class Trainer():
-    def __init__(self, name, pokemon, current_pokemon=0):
+    def __init__(self, name, pokemon, current_pokemon):
         self.name = name
         self. pokemon = pokemon
         self.potions = 3
-        self.current_pokemon = pokemon[0]
+        self.current_pokemon = current_pokemon
         
     def use_potion(self):
         if self.potions <= 0:
@@ -268,5 +280,9 @@ name_2 = input("Enter player 2's name: ")
 print("Welcome Pokemon Trainers {p1} and {p2}".format(p1=name_1, p2=name_2))
 squad_1 = pika.pokemon_selection(starting_pokemon, name_1)
 squad_2 = pika.pokemon_selection(starting_pokemon, name_2)
+
+starting_pokemon = pika.starting_pokemon_selection(name_1, squad_1)
+player_1 = Trainer(name_1, squad_1, starting_pokemon)
+print(player_1.current_pokemon)
 
     
