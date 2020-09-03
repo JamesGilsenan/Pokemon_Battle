@@ -28,16 +28,16 @@ class Pokemon:
             self.unconcious = True
             print("{name} has taken {dmg} damage. {name} has been knocked unconcious!".format(name=self.name, dmg = damage))
         else:
-            print("{name} has taken {dmg} damage. They now have {hp} hp".format(name=self.name, dmg=damage,
-             hp=self.current_hp))
+            print("{name} has taken {dmg} damage. They now have {hp}/{max_hp} hp".format(name=self.name, dmg=damage,
+             hp=self.current_hp, max_hp=self.max_hp))
         return self.unconcious
     
     def regain_health(self, heal):
         if self.unconcious is False and self.current_hp < self.max_hp:
             self.current_hp += heal
             self.current_hp = self.set_health()
-            print("{name} was healed by {health} hp. They now have {hp} hp".format(name=self.name, health=heal, 
-            hp=self.current_hp))
+            print("{name} was healed by {health} hp. They now have {hp}/{max_hp} hp".format(name=self.name, 
+            health=heal, hp=self.current_hp, max_hp=self.max_hp))
         elif self.current_hp == self.max_hp:
             print("Cannot heal {pokemon} as they already have full health".format(pokemon=self.name))
         else:
@@ -207,8 +207,12 @@ class Trainer():
     def use_potion(self):
         if self.potions <= 0:
             print("{name} has no potions to use".format(name=self.name))
-        self.potions -= 1
-        self.current_pokemon.regain_health(10)
+        else:
+            self.potions -= 1
+            self.pokemon[self.current_pokemon].regain_health(10)
+            print("{trainer} now has {potions}/3 potions remaining".format(trainer=self.name, 
+            potions=self.potions))
+
 
     def attack_trainer(self, other_trainer):
         self.pokemon[self.current_pokemon].attack(other_trainer.pokemon[other_trainer.current_pokemon])
@@ -237,15 +241,7 @@ class Trainer():
                 trainer=self.name, new_pokemon=self.pokemon[index].name))
             else:
                 print("{} is not a valid pokemon".format(pokemon_selection))
-        """
-        if self.pokemon[pokemon_index].unconcious is True:
-            print("{trainer} cannot send out {new_pokemon} because they are unconcious".format(
-            trainer=self.name, new_pokemon=self.pokemon[pokemon_index].name))
-            return
-        print("{trainer} has recalled {prev_pokemon}. {trainer} has sent out {new_pokemon}!".format(
-            trainer=self.name, prev_pokemon=self.current_pokemon.name, new_pokemon=self.pokemon[pokemon_index].name))
-        self.current_pokemon = self.pokemon[pokemon_index]
-        """
+
 
     def did_win(self, other_trainer):
         unconcious_count = 0
@@ -338,13 +334,15 @@ while player_1.did_win(player_2) is False:
     turn_counter += 1
     if turn_counter % 2 == 1:
         print("\n- {}'s turn".format(player_1.name))
-        player_input = input("** What will {pokemon} do? **\n- Attack \t- Potion \t- Switch Pokemon   ").format(pokemon=player_1.pokemon[player_1.current_pokemon]).lower()
+        player_input = input("* What will {pokemon} do? *".format(pokemon=player_1.pokemon[player_1.current_pokemon])
+        + "\n- Attack \t- Potion \t- Switch Pokemon   ").lower()
+        print(player_1.pokemon[player_1.current_pokemon])
         if player_input in actions:
             print("valid action")
-            if player_input is actions[1]:
+            if player_input == actions[1]:
+                player_1.pokemon[player_1.current_pokemon].lose_health(6)
                 player_1.use_potion()
             elif player_input == actions[2] or player_1 == actions[3]:
-                print("swicthing pokemon...")
                 player_1.switch_pokemon(player_1.current_pokemon)
                 print(player_1.pokemon[player_1.current_pokemon])
                 player_1.attack_trainer(player_2)
