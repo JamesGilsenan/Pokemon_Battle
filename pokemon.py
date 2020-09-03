@@ -142,11 +142,11 @@ class Pokemon:
         self.defense_stat += 1
         print("They have evolved into a level {lvl} {pokemon}!".format(lvl=self.level, pokemon=self.name))
 
-    def first_move(self, other_pokemon):
+    def first_move(self, other_pokemon, trainer_1, trainer_2):
         if self.speed_stat > other_pokemon.speed_stat:
-            print("{pokemon} has the first move!".format(pokemon=self.name))
+            print("{player_1} has the first move!".format(player_1=trainer_1))
         else:
-            print("{other_pokemon} has the first move!".format(other_pokemon=other_pokemon.name))
+            print("{player_2} has the first move!".format(player_2=trainer_2))
 
     def pokemon_selection(self, starting_pokemon, trainer_name):
         pokemon_squad = []
@@ -211,10 +211,33 @@ class Trainer():
         self.current_pokemon.regain_health(10)
 
     def attack_trainer(self, other_trainer):
-        self.current_pokemon.attack(other_trainer.current_pokemon)
+        self.pokemon[self.current_pokemon].attack(other_trainer.pokemon[other_trainer.current_pokemon])
+        #self.current_pokemon.attack(other_trainer.pokemon[other_trainer.current_pokemon])
         self.did_win(other_trainer)
 
-    def switch_pokemon(self, pokemon_index):
+    def switch_pokemon(self, current_index):
+        #issue is str of pokemon vs pokemon obj. should use dict? or list of all pokemon
+        available_pokemon = []
+        for pokemon in self.pokemon:
+            available_pokemon.append(pokemon.name.lower())
+        while self.current_pokemon == current_index:
+            pokemon_selection = input("{name}, please choose a pokemon to switch to: ".format(name=self.name) + 
+            ", ".join(available_pokemon) + "   ").lower()
+            if pokemon_selection in available_pokemon:
+                index = available_pokemon.index(pokemon_selection)
+                if index == self.current_pokemon:
+                    print("{} is already your current pokemom".format(self.pokemon[self.current_pokemon]))
+                elif self.pokemon[index].unconcious is False:
+                    print("{trainer}: {pokemon} return. Go {new_pokemon}".format(trainer=self.name, 
+                    pokemon=self.pokemon[self.current_pokemon], new_pokemon=self.pokemon[index]))
+                    self.current_pokemon = index
+                    #self.pokemon[self.current_pokemon]
+                else:
+                    print("{trainer} cannot send out {new_pokemon} because they are unconcious".format(
+                trainer=self.name, new_pokemon=self.pokemon[index].name))
+            else:
+                print("{} is not a valid pokemon".format(pokemon_selection))
+        """
         if self.pokemon[pokemon_index].unconcious is True:
             print("{trainer} cannot send out {new_pokemon} because they are unconcious".format(
             trainer=self.name, new_pokemon=self.pokemon[pokemon_index].name))
@@ -222,6 +245,7 @@ class Trainer():
         print("{trainer} has recalled {prev_pokemon}. {trainer} has sent out {new_pokemon}!".format(
             trainer=self.name, prev_pokemon=self.current_pokemon.name, new_pokemon=self.pokemon[pokemon_index].name))
         self.current_pokemon = self.pokemon[pokemon_index]
+        """
 
     def did_win(self, other_trainer):
         unconcious_count = 0
@@ -231,6 +255,9 @@ class Trainer():
         if unconcious_count == len(other_trainer.pokemon):
             print("{opp_trainer} has no more Pokemon to send out...".format(opp_trainer=other_trainer.name))
             print("** {name} wins the pokemon battle! **".format(name=self.name))
+            return True
+        else:
+            return False
 
 
 
@@ -289,18 +316,37 @@ name_1 = "jim"
 name_2 = "bob"
 squad_1 = [pika, charmander, bulbasaur]
 squad_2 = [squirtle, bulbasaur, starmie]
+starter_1 = 1
+starter_2 = 2
+
 
 #name_1 = input("Enter Player 1's name: ")
 #name_2 = input("Enter player 2's name: ")
 print("Welcome Pokemon Trainers {p1} and {p2}".format(p1=name_1, p2=name_2))
 #squad_1 = pika.pokemon_selection(starting_pokemon, name_1)
 #squad_2 = pika.pokemon_selection(starting_pokemon, name_2)
-
-starter_1 = pika.starting_pokemon_selection(name_1, squad_1)
-starter_2 = pika.starting_pokemon_selection(name_2, squad_2)
+#starter_1 = pika.starting_pokemon_selection(name_1, squad_1)
+#starter_2 = pika.starting_pokemon_selection(name_2, squad_2)
 player_1 = Trainer(name_1, squad_1, starter_1)
 player_2 = Trainer(name_2, squad_2, starter_2)
-print(player_1.current_pokemon)
-print(player_2.current_pokemon)
+player_1.pokemon[starter_1].first_move(player_2.pokemon[starter_2], player_1.name, player_2.name)
 
-    
+turn_counter = 0
+actions = ["attack", "potion", "switch", "switch pokemon"]
+
+while player_1.did_win(player_2) is False:
+    turn_counter += 1
+    if turn_counter % 2 == 1:
+        print("\n- {}'s turn".format(player_1.name))
+        player_input = input("** What will {pokemon} do? **\n- Attack \t- Potion \t- Switch Pokemon   ").format(pokemon=player_1.pokemon[player_1.current_pokemon]).lower()
+        if player_input in actions:
+            print("valid action")
+            if player_input is actions[1]:
+                player_1.use_potion()
+            elif player_input == actions[2] or player_1 == actions[3]:
+                print("swicthing pokemon...")
+                player_1.switch_pokemon(player_1.current_pokemon)
+                print(player_1.pokemon[player_1.current_pokemon])
+                player_1.attack_trainer(player_2)
+        else:
+            print("Sorry. {} is not a valid action".format(player_input))
