@@ -21,6 +21,13 @@ class Pokemon:
 #             pokemon=self.name, lvl=self.level, type=self.type, currhp=self.current_hp, maxhp=self.max_hp,
 #             xp=self.xp, reqxp=self.xp_cap, spd=self.speed_stat, atk=self.attack_stat, defense=self.defense_stat)
 
+    def pokedex_information(self):
+        print("""\t--Pokedex Information on {pokemon}--
+    -Level: {lvl} \t-Type: {type} \t-Health: {currhp}/{maxhp} \t-XP: {xp}/{reqxp}
+    -Speed: {spd} \t-Attack: {atk} \t-Defense: {defense}""".format(
+pokemon=self.name, lvl=self.level, type=self.type, currhp=self.current_hp, maxhp=self.max_hp,
+    xp=self.xp, reqxp=self.xp_cap, spd=self.speed_stat, atk=self.attack_stat, defense=self.defense_stat))
+
     def lose_health(self, damage):
         self.current_hp -= damage
         if self.current_hp <= 0:
@@ -38,10 +45,12 @@ class Pokemon:
             self.current_hp = self.set_health()
             print("{name} was healed by {health} hp. They now have {hp}/{max_hp} hp".format(name=self.name, 
             health=heal, hp=self.current_hp, max_hp=self.max_hp))
+            return True
         elif self.current_hp == self.max_hp:
             print("Cannot heal {pokemon} as they already have full health".format(pokemon=self.name))
         else:
             print("Cannot heal {name}. They are unconcious".format(name=self.name))
+        return False
 
     def revive(self, health):
         if self.unconcious is False:
@@ -128,11 +137,13 @@ class Pokemon:
                 self.level = 2
                 self.name = next_evos[0]
                 self.max_hp = (self.level + 4) * 4
+                print("They have evolved into a level {lvl} {pokemon}!".format(lvl=self.level, pokemon=self.name))
             elif self.level >= 5 and self.name == next_evos[0]:
                 print("...{pokemon} is evolving...".format(pokemon=self.name))
                 self.level = 2
                 self.name = next_evos[1]
-                self.max_hp = (self.level + 4) * 5               
+                self.max_hp = (self.level + 4) * 5 
+                print("They have evolved into a level {lvl} {pokemon}!".format(lvl=self.level, pokemon=self.name))
         self.current_hp = self.max_hp
         self.unconcious = False
         self.xp = 0
@@ -140,7 +151,6 @@ class Pokemon:
         self.speed_stat += 3
         self.attack_stat += 1
         self.defense_stat += 1
-        print("They have evolved into a level {lvl} {pokemon}!".format(lvl=self.level, pokemon=self.name))
 
     def first_move(self, other_pokemon, trainer_1, trainer_2):
         if self.speed_stat > other_pokemon.speed_stat:
@@ -207,9 +217,9 @@ class Trainer():
     def use_potion(self):
         if self.potions <= 0:
             print("{name} has no potions to use".format(name=self.name))
-        else:
+        elif self.pokemon[self.current_pokemon].regain_health(10) is True:
             self.potions -= 1
-            self.pokemon[self.current_pokemon].regain_health(10)
+            #self.pokemon[self.current_pokemon].regain_health(10)
             print("{trainer} now has {potions}/3 potions remaining".format(trainer=self.name, 
             potions=self.potions))
 
@@ -328,23 +338,61 @@ player_2 = Trainer(name_2, squad_2, starter_2)
 player_1.pokemon[starter_1].first_move(player_2.pokemon[starter_2], player_1.name, player_2.name)
 
 turn_counter = 0
-actions = ["attack", "potion", "switch", "switch pokemon"]
+actions = ["attack", "potion", "switch", "switch pokemon", "pokedex"]
 
-while player_1.did_win(player_2) is False:
+while player_1.did_win(player_2) is False or player_2.did_win(player_1) is False:
     turn_counter += 1
     if turn_counter % 2 == 1:
         print("\n- {}'s turn".format(player_1.name))
-        player_input = input("* What will {pokemon} do? *".format(pokemon=player_1.pokemon[player_1.current_pokemon])
-        + "\n- Attack \t- Potion \t- Switch Pokemon   ").lower()
-        print(player_1.pokemon[player_1.current_pokemon])
+        player_input = input("* What will {pokemon} do? *   HP: 12/12".format(pokemon=player_1.pokemon[
+            player_1.current_pokemon])
+            #, currhp=self.current_hp, maxhp=self.max_hp)
+        + "\n- Attack \t- Potion \t- Switch Pokemon \t- Pokedex   ").lower()
         if player_input in actions:
-            print("valid action")
+            #print("valid action")
             if player_input == actions[1]:
-                player_1.pokemon[player_1.current_pokemon].lose_health(6)
+                #player_1.pokemon[player_1.current_pokemon].lose_health(6)
                 player_1.use_potion()
             elif player_input == actions[2] or player_1 == actions[3]:
                 player_1.switch_pokemon(player_1.current_pokemon)
-                print(player_1.pokemon[player_1.current_pokemon])
+            elif player_input == actions[0]:
+                #print("Attacking...")
                 player_1.attack_trainer(player_2)
+            elif player_input == actions[4]:
+                #print("Using pokedex...")
+                player_1.pokemon[player_1.current_pokemon].pokedex_information()
         else:
             print("Sorry. {} is not a valid action".format(player_input))
+    else:
+        print("\n- {}'s turn".format(player_2.name))
+        player_input = input("* What will {pokemon} do? *".format(pokemon=player_2.pokemon[
+            player_2.current_pokemon])
+            #, currhp=self.current_hp, maxhp=self.max_hp)
+        + "\n- Attack \t- Potion \t- Switch Pokemon \t- Pokedex   ").lower()
+        if player_input in actions:
+            #print("valid action")
+            if player_input == actions[1]:
+                #player_2.pokemon[player_2.current_pokemon].lose_health(6)
+                player_2.use_potion()
+            elif player_input == actions[2] or player_2 == actions[3]:
+                player_2.switch_pokemon(player_2.current_pokemon)
+            elif player_input == actions[0]:
+                #print("Attacking...")
+                player_2.attack_trainer(player_1)
+            elif player_input == actions[4]:
+                #print("Using pokedex...")
+                player_2.pokemon[player_2.current_pokemon].pokedex_information()
+        else:
+            print("Sorry. {} is not a valid action".format(player_input))
+
+
+#Modify battle system so player's turn is a method
+#pokemon gets knocked out. Need to prompt player to switch pokemon
+#test use_potion(), regain_health() methods
+#test game over logic and while loop that prompts players to take action
+
+#Improvements
+#Pokemon types - Dict? How they're checked to see if there oppenent has an adv/disadv
+#Pokedex - Display pokemon types they are strong/ weak against
+#Damage calculation
+#Display Health - pokemon hp when prompting player for an action
