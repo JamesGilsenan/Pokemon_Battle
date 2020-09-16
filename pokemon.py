@@ -56,8 +56,8 @@ pokemon=self.name, lvl=self.level, type=self.type, currhp=self.current_hp, maxhp
         if self.unconcious is False:
             print("Cannot revive {pokemon} because they are already concious".format(pokemon=self.name))
         else:
-            self.current_hp = health
             self.unconcious = False
+            self.current_hp = health
             print("{name} was revived. They now have {hp} hp".format(name=self.name, hp=self.current_hp))
 
     def set_health(self):
@@ -225,18 +225,23 @@ class Trainer():
 
 
     def attack_trainer(self, other_trainer):
-        self.pokemon[self.current_pokemon].attack(other_trainer.pokemon[other_trainer.current_pokemon])
-        #self.current_pokemon.attack(other_trainer.pokemon[other_trainer.current_pokemon])
+        if self.pokemon[self.current_pokemon].attack(other_trainer.pokemon[other_trainer.current_pokemon]) == True:
+            other_trainer.switch_pokemon(other_trainer.current_pokemon)
+            player_input = input(
+                "-> {plyr}, do you want switch pokemon? {enmy} is about to send out {pokemon}!   yes/no:   ".format(
+                plyr=self.name, enmy=other_trainer.name, pokemon=other_trainer.pokemon[other_trainer.current_pokemon]))
+            if player_input == "yes":
+                self.switch_pokemon(self.current_pokemon)
+
         self.did_win(other_trainer)
 
     def switch_pokemon(self, current_index):
-        #issue is str of pokemon vs pokemon obj. should use dict? or list of all pokemon
         available_pokemon = []
         for pokemon in self.pokemon:
             available_pokemon.append(pokemon.name.lower())
         while self.current_pokemon == current_index:
-            pokemon_selection = input("{name}, please choose a pokemon to switch to: ".format(name=self.name) + 
-            ", ".join(available_pokemon) + "   ").lower()
+            pokemon_selection = input("\n-> {name}, please choose a pokemon to switch to: ".format(
+                name=self.name) + ", ".join(available_pokemon) + "   ").lower()
             if pokemon_selection in available_pokemon:
                 index = available_pokemon.index(pokemon_selection)
                 if index == self.current_pokemon:
@@ -270,25 +275,22 @@ class Trainer():
         curr_pokemon = self.pokemon[self.current_pokemon]
 
         print("\n- {}'s turn".format(self.name))
-        player_input = input("* What will {pokemon} do? *   {currhp}/{maxhp} hp".format(pokemon=curr_pokemon, 
+        player_input = input("-> What will {pokemon} do?   {currhp}/{maxhp} hp".format(pokemon=curr_pokemon, 
         currhp=curr_pokemon.current_hp, maxhp=curr_pokemon.max_hp)
-        + "\n- Attack \t- Potion \t- Switch Pokemon \t- Pokedex   ").lower()
+        + "\n-> Attack \t-> HP Potion \t-> Switch Pokemon \t-> Pokedex   ").lower()
         
         if player_input in actions:
-            #print("valid action")
             if player_input == actions[1]:
-                #player_1.pokemon[player_1.current_pokemon].lose_health(6)
                 self.use_potion()
             elif player_input == actions[2] or player_input == actions[3]:
                 self.switch_pokemon(self.current_pokemon)
             elif player_input == actions[0]:
-                #print("Attacking...")
                 self.attack_trainer(other_trainer)
             elif player_input == actions[4]:
-                #print("Using pokedex...")
                 curr_pokemon.pokedex_information()
         else:
             print("Sorry. {} is not a valid action".format(player_input))
+
 
 starting_level = 1
 pika = Pokemon("Pichu", starting_level, "Electric")
@@ -370,12 +372,11 @@ while player_1.did_win(player_2) is False or player_2.did_win(player_1) is False
         player_2.player_turn(player_1)
 
 #Known Bugs
-#Modify battle system so player's turn is a method
-#pokemon gets knocked out. Need to prompt player to switch pokemon
 #test use_potion(), regain_health() methods
 #test game over logic and while loop that prompts players to take action
 #Jim wins pokemon battle prints out twice
 #Change battle system so player with fastest pokemon starts first
+#Can switch pokemon even when no other pokemon are concious. Gets stuck in a loop
 
 #Improvements
 #Pokemon types - Dict? How they're checked to see if there oppenent has an adv/disadv
