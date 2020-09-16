@@ -265,7 +265,30 @@ class Trainer():
         else:
             return False
 
+    def player_turn(self, other_trainer):
+        actions = ["attack", "potion", "switch", "switch pokemon", "pokedex"]
+        curr_pokemon = self.pokemon[self.current_pokemon]
 
+        print("\n- {}'s turn".format(self.name))
+        player_input = input("* What will {pokemon} do? *   {currhp}/{maxhp} hp".format(pokemon=curr_pokemon, 
+        currhp=curr_pokemon.current_hp, maxhp=curr_pokemon.max_hp)
+        + "\n- Attack \t- Potion \t- Switch Pokemon \t- Pokedex   ").lower()
+        
+        if player_input in actions:
+            #print("valid action")
+            if player_input == actions[1]:
+                #player_1.pokemon[player_1.current_pokemon].lose_health(6)
+                self.use_potion()
+            elif player_input == actions[2] or player_input == actions[3]:
+                self.switch_pokemon(self.current_pokemon)
+            elif player_input == actions[0]:
+                #print("Attacking...")
+                self.attack_trainer(other_trainer)
+            elif player_input == actions[4]:
+                #print("Using pokedex...")
+                curr_pokemon.pokedex_information()
+        else:
+            print("Sorry. {} is not a valid action".format(player_input))
 
 starting_level = 1
 pika = Pokemon("Pichu", starting_level, "Electric")
@@ -338,58 +361,21 @@ player_2 = Trainer(name_2, squad_2, starter_2)
 player_1.pokemon[starter_1].first_move(player_2.pokemon[starter_2], player_1.name, player_2.name)
 
 turn_counter = 0
-actions = ["attack", "potion", "switch", "switch pokemon", "pokedex"]
 
 while player_1.did_win(player_2) is False or player_2.did_win(player_1) is False:
     turn_counter += 1
     if turn_counter % 2 == 1:
-        print("\n- {}'s turn".format(player_1.name))
-        player_input = input("* What will {pokemon} do? *   HP: 12/12".format(pokemon=player_1.pokemon[
-            player_1.current_pokemon])
-            #, currhp=self.current_hp, maxhp=self.max_hp)
-        + "\n- Attack \t- Potion \t- Switch Pokemon \t- Pokedex   ").lower()
-        if player_input in actions:
-            #print("valid action")
-            if player_input == actions[1]:
-                #player_1.pokemon[player_1.current_pokemon].lose_health(6)
-                player_1.use_potion()
-            elif player_input == actions[2] or player_1 == actions[3]:
-                player_1.switch_pokemon(player_1.current_pokemon)
-            elif player_input == actions[0]:
-                #print("Attacking...")
-                player_1.attack_trainer(player_2)
-            elif player_input == actions[4]:
-                #print("Using pokedex...")
-                player_1.pokemon[player_1.current_pokemon].pokedex_information()
-        else:
-            print("Sorry. {} is not a valid action".format(player_input))
+        player_1.player_turn(player_2)
     else:
-        print("\n- {}'s turn".format(player_2.name))
-        player_input = input("* What will {pokemon} do? *".format(pokemon=player_2.pokemon[
-            player_2.current_pokemon])
-            #, currhp=self.current_hp, maxhp=self.max_hp)
-        + "\n- Attack \t- Potion \t- Switch Pokemon \t- Pokedex   ").lower()
-        if player_input in actions:
-            #print("valid action")
-            if player_input == actions[1]:
-                #player_2.pokemon[player_2.current_pokemon].lose_health(6)
-                player_2.use_potion()
-            elif player_input == actions[2] or player_2 == actions[3]:
-                player_2.switch_pokemon(player_2.current_pokemon)
-            elif player_input == actions[0]:
-                #print("Attacking...")
-                player_2.attack_trainer(player_1)
-            elif player_input == actions[4]:
-                #print("Using pokedex...")
-                player_2.pokemon[player_2.current_pokemon].pokedex_information()
-        else:
-            print("Sorry. {} is not a valid action".format(player_input))
+        player_2.player_turn(player_1)
 
-
+#Known Bugs
 #Modify battle system so player's turn is a method
 #pokemon gets knocked out. Need to prompt player to switch pokemon
 #test use_potion(), regain_health() methods
 #test game over logic and while loop that prompts players to take action
+#Jim wins pokemon battle prints out twice
+#Change battle system so player with fastest pokemon starts first
 
 #Improvements
 #Pokemon types - Dict? How they're checked to see if there oppenent has an adv/disadv
