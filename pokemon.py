@@ -152,12 +152,6 @@ pokemon=self.name, lvl=self.level, type=self.type, currhp=self.current_hp, maxhp
         self.attack_stat += 1
         self.defense_stat += 1
 
-    def first_move(self, other_pokemon, trainer_1, trainer_2):
-        if self.speed_stat > other_pokemon.speed_stat:
-            print("{player_1} has the first move!".format(player_1=trainer_1))
-        else:
-            print("{player_2} has the first move!".format(player_2=trainer_2))
-
     def pokemon_selection(self, starting_pokemon, trainer_name):
         pokemon_squad = []
         display_pokemon = []
@@ -213,7 +207,16 @@ class Trainer():
         self. pokemon = pokemon
         self.potions = 3
         self.current_pokemon = current_pokemon
-        
+    
+    def first_move(self, other_trainer):
+        if self.pokemon[self.current_pokemon].speed_stat > other_trainer.pokemon[
+            other_trainer.current_pokemon].speed_stat:
+            print("{player_1} has the first move!".format(player_1=self.name))
+            return 0
+        else:
+            print("{player_2} has the first move!".format(player_2=other_trainer.name))
+            return 1
+
     def use_potion(self):
         if self.potions <= 0:
             print("{name} has no potions to use".format(name=self.name))
@@ -360,9 +363,7 @@ print("Welcome Pokemon Trainers {p1} and {p2}".format(p1=name_1, p2=name_2))
 #starter_2 = pika.starting_pokemon_selection(name_2, squad_2)
 player_1 = Trainer(name_1, squad_1, starter_1)
 player_2 = Trainer(name_2, squad_2, starter_2)
-player_1.pokemon[starter_1].first_move(player_2.pokemon[starter_2], player_1.name, player_2.name)
-
-turn_counter = 0
+turn_counter = player_1.first_move(player_2)
 
 while player_1.did_win(player_2) is False or player_2.did_win(player_1) is False:
     turn_counter += 1
@@ -372,10 +373,10 @@ while player_1.did_win(player_2) is False or player_2.did_win(player_1) is False
         player_2.player_turn(player_1)
 
 #Known Bugs
-#test use_potion(), regain_health() methods
-#test game over logic and while loop that prompts players to take action
-#Jim wins pokemon battle prints out twice
-#Change battle system so player with fastest pokemon starts first
+#use_potion when no potions are available ends player turn
+#Incorrect player input in battle menu ends player turn
+#Game Over Logic - Game Over is triggered but doesn't end while loop
+#Game Over - "Player wins pokemon battle" prints out twice
 #Can switch pokemon even when no other pokemon are concious. Gets stuck in a loop
 
 #Improvements
