@@ -232,11 +232,18 @@ class Trainer():
         ) == True and other_trainer.unconcious_count() <= len(other_trainer.pokemon) - 1:
             other_trainer.switch_pokemon(other_trainer.current_pokemon)
             if self.unconcious_count() <= len(other_trainer.pokemon) - 2:
-                player_input = input(
-                    "-> {plyr}, do you want switch pokemon? {enmy} is about to send out {pokemon}!   yes/no:   ".format(
-                    plyr=self.name, enmy=other_trainer.name, pokemon=other_trainer.pokemon[other_trainer.current_pokemon]))
-                if player_input == "yes":
-                    self.switch_pokemon(self.current_pokemon)
+                player_input = ""
+                while player_input != "yes" or player_input != "no":
+                    player_input = input(
+                        "-> {plyr}, do you want switch pokemon? {enmy} is about to send out {pokemon}!   yes/no:   ".format(
+                        plyr=self.name, enmy=other_trainer.name, pokemon=other_trainer.pokemon[
+                        other_trainer.current_pokemon])).lower()
+                    if player_input == "yes":
+                        self.switch_pokemon(self.current_pokemon)
+                    elif player_input == "no":
+                        break
+                    else:
+                        print("{} is not a valid input".format(player_input))
         self.did_win(other_trainer)
 
     def switch_pokemon(self, current_index):
@@ -277,23 +284,25 @@ class Trainer():
     def player_turn(self, other_trainer):
         actions = ["attack", "potion", "switch", "switch pokemon", "pokedex"]
         curr_pokemon = self.pokemon[self.current_pokemon]
+        player_input = ""
 
         print("\n- {}'s turn".format(self.name))
-        player_input = input("-> What will {pokemon} do?   {currhp}/{maxhp} hp".format(pokemon=curr_pokemon, 
-        currhp=curr_pokemon.current_hp, maxhp=curr_pokemon.max_hp)
-        + "\n-> Attack \t-> HP Potion \t-> Switch Pokemon \t-> Pokedex   ").lower()
-        
-        if player_input in actions:
-            if player_input == actions[1]:
-                self.use_potion()
-            elif player_input == actions[2] or player_input == actions[3]:
-                self.switch_pokemon(self.current_pokemon)
-            elif player_input == actions[0]:
-                self.attack_trainer(other_trainer)
-            elif player_input == actions[4]:
-                curr_pokemon.pokedex_information()
-        else:
-            print("Sorry. {} is not a valid action".format(player_input))
+        while player_input not in actions:
+            player_input = input("\n-> What will {pokemon} do?   {currhp}/{maxhp} hp".format(pokemon=curr_pokemon, 
+            currhp=curr_pokemon.current_hp, maxhp=curr_pokemon.max_hp)
+            + "\n-> Attack \t-> HP Potion \t-> Switch Pokemon \t-> Pokedex   ").lower()
+            
+            if player_input in actions:
+                if player_input == actions[1]:
+                    self.use_potion()
+                elif player_input == actions[2] or player_input == actions[3]:
+                    self.switch_pokemon(self.current_pokemon)
+                elif player_input == actions[0]:
+                    self.attack_trainer(other_trainer)
+                elif player_input == actions[4]:
+                    curr_pokemon.pokedex_information()
+            else:
+                print("Sorry. {} is not a valid action. Try again".format(player_input))
 
 
 starting_level = 1
@@ -378,9 +387,9 @@ print("\t{name} wins the pokemon battle!".format(name=player_1.name))
 print("*------------------------------------------*")
 
 #Known Bugs
-#use_potion when no potions are available ends player turn
-#Incorrect player input in battle menu ends player turn
-#Incorrect input for option to switch pokemon ends turn
+#use_potion and switch pokemon when no potions are available ends player turn
+#-----Incorrect player input in battle menu ends player turn
+#-----Incorrect input for option to switch pokemon ends turn
 
 #Improvements
 #Pokemon types - Dict? How they're checked to see if there oppenent has an adv/disadv
