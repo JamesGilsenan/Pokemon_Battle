@@ -84,12 +84,12 @@ pokemon=self.name, lvl=self.level, type=self.type, currhp=self.current_hp, maxhp
             
         if self.have_advantage(other_pokemon.type) == "yes": 
             if other_pokemon.lose_health((self.attack_stat - self.defense_stat) * 2) is True:
+                print("{name}'s attack was super effective".format(name=self.name)) 
                 self.gain_xp(other_pokemon.level)
-            print("{name}'s attack was super effective".format(name=self.name))            
         elif self.have_advantage(other_pokemon.type) == "no":
             if other_pokemon.lose_health((self.attack_stat - other_pokemon.defense_stat) * 0.5) is True:
+                print("{name}'s attack wasn't very effective".format(name=self.name))
                 self.gain_xp(other_pokemon.level)
-            print("{name}'s attack wasn't very effective".format(name=self.name))
         else:
             if other_pokemon.lose_health(self.attack_stat - other_pokemon.defense_stat) is True:
                 self.gain_xp(other_pokemon.level)
@@ -231,12 +231,12 @@ class Trainer():
         if self.pokemon[self.current_pokemon].attack(other_trainer.pokemon[other_trainer.current_pokemon]
         ) == True and other_trainer.unconcious_count() <= len(other_trainer.pokemon) - 1:
             other_trainer.switch_pokemon(other_trainer.current_pokemon)
-            player_input = input(
-                "-> {plyr}, do you want switch pokemon? {enmy} is about to send out {pokemon}!   yes/no:   ".format(
-                plyr=self.name, enmy=other_trainer.name, pokemon=other_trainer.pokemon[other_trainer.current_pokemon]))
-            if player_input == "yes":
-                self.switch_pokemon(self.current_pokemon)
-
+            if self.unconcious_count() <= len(other_trainer.pokemon) - 2:
+                player_input = input(
+                    "-> {plyr}, do you want switch pokemon? {enmy} is about to send out {pokemon}!   yes/no:   ".format(
+                    plyr=self.name, enmy=other_trainer.name, pokemon=other_trainer.pokemon[other_trainer.current_pokemon]))
+                if player_input == "yes":
+                    self.switch_pokemon(self.current_pokemon)
         self.did_win(other_trainer)
 
     def switch_pokemon(self, current_index):
@@ -251,7 +251,7 @@ class Trainer():
                 if index == self.current_pokemon:
                     print("{} is already your current pokemom".format(self.pokemon[self.current_pokemon]))
                 elif self.pokemon[index].unconcious is False:
-                    print("{trainer}: {pokemon} return. Go {new_pokemon}".format(trainer=self.name, 
+                    print("{trainer}: {pokemon} return. Go {new_pokemon}!".format(trainer=self.name, 
                     pokemon=self.pokemon[self.current_pokemon], new_pokemon=self.pokemon[index]))
                     self.current_pokemon = index
                 else:
@@ -381,10 +381,8 @@ print("*------------------------------------------*")
 #use_potion when no potions are available ends player turn
 #Incorrect player input in battle menu ends player turn
 #Incorrect input for option to switch pokemon ends turn
-#Offer to switch pokemon after your knock oppenent unconcious even if you have no poekmon concious
 
 #Improvements
 #Pokemon types - Dict? How they're checked to see if there oppenent has an adv/disadv
 #Pokedex - Display pokemon types they are strong/ weak against
 #Damage calculation
-#Display Health - pokemon hp when prompting player for an action
