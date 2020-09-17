@@ -228,7 +228,8 @@ class Trainer():
 
 
     def attack_trainer(self, other_trainer):
-        if self.pokemon[self.current_pokemon].attack(other_trainer.pokemon[other_trainer.current_pokemon]) == True:
+        if self.pokemon[self.current_pokemon].attack(other_trainer.pokemon[other_trainer.current_pokemon]
+        ) == True and other_trainer.unconcious_count() <= len(other_trainer.pokemon) - 1:
             other_trainer.switch_pokemon(other_trainer.current_pokemon)
             player_input = input(
                 "-> {plyr}, do you want switch pokemon? {enmy} is about to send out {pokemon}!   yes/no:   ".format(
@@ -253,22 +254,22 @@ class Trainer():
                     print("{trainer}: {pokemon} return. Go {new_pokemon}".format(trainer=self.name, 
                     pokemon=self.pokemon[self.current_pokemon], new_pokemon=self.pokemon[index]))
                     self.current_pokemon = index
-                    #self.pokemon[self.current_pokemon]
                 else:
                     print("{trainer} cannot send out {new_pokemon} because they are unconcious".format(
                 trainer=self.name, new_pokemon=self.pokemon[index].name))
             else:
                 print("{} is not a valid pokemon".format(pokemon_selection))
 
+    def unconcious_count(self):
+        count = 0
+        for monster in self.pokemon:
+            if monster.unconcious is True:
+                count += 1
+        return count
 
     def did_win(self, other_trainer):
-        unconcious_count = 0
-        for monster in other_trainer.pokemon:
-            if monster.unconcious is True:
-                unconcious_count += 1
+        unconcious_count = other_trainer.unconcious_count()
         if unconcious_count == len(other_trainer.pokemon):
-            print("{opp_trainer} has no more Pokemon to send out...".format(opp_trainer=other_trainer.name))
-            print("** {name} wins the pokemon battle! **".format(name=self.name))
             return True
         else:
             return False
@@ -346,12 +347,12 @@ test_pokemon_1.evolve()
 print(test_pokemon_1) """
 
 #for testing
-name_1 = "jim"
-name_2 = "bob"
-squad_1 = [pika, charmander, bulbasaur]
-squad_2 = [squirtle, bulbasaur, starmie]
-starter_1 = 1
-starter_2 = 2
+name_1 = "Jim"
+name_2 = "Bob"
+squad_1 = [pika, charmander]#, bulbasaur]
+squad_2 = [squirtle, bulbasaur]#, starmie]
+starter_1 = 0
+starter_2 = 0
 
 
 #name_1 = input("Enter Player 1's name: ")
@@ -365,19 +366,22 @@ player_1 = Trainer(name_1, squad_1, starter_1)
 player_2 = Trainer(name_2, squad_2, starter_2)
 turn_counter = player_1.first_move(player_2)
 
-while player_1.did_win(player_2) is False or player_2.did_win(player_1) is False:
+while player_1.did_win(player_2) == False and player_2.did_win(player_1) == False:
     turn_counter += 1
     if turn_counter % 2 == 1:
         player_1.player_turn(player_2)
     else:
         player_2.player_turn(player_1)
+print("\n{opp_trainer} has no more Pokemon to send out...".format(opp_trainer=player_2.name))
+print("*------------------------------------------*")
+print("\t{name} wins the pokemon battle!".format(name=player_1.name))
+print("*------------------------------------------*")
 
 #Known Bugs
 #use_potion when no potions are available ends player turn
 #Incorrect player input in battle menu ends player turn
-#Game Over Logic - Game Over is triggered but doesn't end while loop
-#Game Over - "Player wins pokemon battle" prints out twice
-#Can switch pokemon even when no other pokemon are concious. Gets stuck in a loop
+#Incorrect input for option to switch pokemon ends turn
+#Offer to switch pokemon after your knock oppenent unconcious even if you have no poekmon concious
 
 #Improvements
 #Pokemon types - Dict? How they're checked to see if there oppenent has an adv/disadv
