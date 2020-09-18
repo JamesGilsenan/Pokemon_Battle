@@ -15,11 +15,6 @@ class Pokemon:
 
     def __repr__(self):
       return self.name
-#         return """--Pokedex Information on {pokemon}--
-#  -Level: {lvl} \t-Type: {type} \t-Health: {currhp}/{maxhp} \t-XP: {xp}/{reqxp}
-#  -Speed: {spd} \t-Attack: {atk} \t-Defense: {defense}""".format(
-#             pokemon=self.name, lvl=self.level, type=self.type, currhp=self.current_hp, maxhp=self.max_hp,
-#             xp=self.xp, reqxp=self.xp_cap, spd=self.speed_stat, atk=self.attack_stat, defense=self.defense_stat)
 
     def pokedex_information(self):
         print("""\t--Pokedex Information on {pokemon}--
@@ -157,7 +152,7 @@ pokemon=self.name, lvl=self.level, type=self.type, currhp=self.current_hp, maxhp
             display_pokemon.append(key)
         print("\n- {}, please choose 3 pokemon to form your squad".format(trainer_name))
         while len(pokemon_squad) < 3:
-            selection = input("Please choose a pokemon: " + ", ".join(display_pokemon) + "   ").lower()
+            selection = input("-> Please choose a pokemon: " + ", ".join(display_pokemon) + "   ").lower()
             if selection in display_pokemon:
                 index = display_pokemon.index(selection)
                 pokemon_squad.append(starting_pokemon[selection])
@@ -165,7 +160,7 @@ pokemon=self.name, lvl=self.level, type=self.type, currhp=self.current_hp, maxhp
                 display_pokemon.pop(index)
             else:
                 print("Sorry, {user_input} is not a vaild pokemon selection".format(user_input=selection))
-        print("-> {name} your pokemon squad is: {squad}".format(name=trainer_name, squad=pokemon_squad))
+        print("- {name} your pokemon squad is: {squad}".format(name=trainer_name, squad=pokemon_squad))
         return pokemon_squad
 
     def starting_pokemon_selection(self, trainer_name, squad):
@@ -175,7 +170,7 @@ pokemon=self.name, lvl=self.level, type=self.type, currhp=self.current_hp, maxhp
             display_pokemon.append(pokemon_name)
         starter = ""
         while starter == "":
-            starter = input("\n- {name}, please choose your pokemon to start the battle: ".format(
+            starter = input("\n-> {name}, please choose your pokemon to start the battle: ".format(
                 name=trainer_name, squad=display_pokemon) + ", ".join(display_pokemon) + "   ").lower()
             if starter in display_pokemon:
                 index = display_pokemon.index(starter)
@@ -325,64 +320,24 @@ charmander = Pokemon("Charmander", starting_level, "fire")
 starmie = Pokemon("Starmie", starting_level, "water")
 starting_pokemon = {"pika": pika, "squirtle": squirtle, "bulbasaur": bulbasaur, "charmander": charmander, 
 "starmie": starmie}
-"""
-opponent_level = 3
-pikachu = Pikachu("Pikachu", starting_level, "Electric")
-starmie = Pokemon("Starmie", opponent_level, "water")
-starmie2 = Pokemon("Starmie", opponent_level, "water")
-starmie3 = Pokemon("Starmie", opponent_level, "water")
-starmie4 = Pokemon("Starmie", opponent_level, "water")
-starmie5 = Pokemon("Starmie", opponent_level, "water")
-starmie6 = Pokemon("Starmie", opponent_level, "water")
-starmie7 = Pokemon("Starmie", opponent_level, "water")
-starmie8 = Pokemon("Starmie", opponent_level, "water")
-starmie9 = Pokemon("Starmie", opponent_level, "water")
-starmie10 = Pokemon("Starmie", opponent_level, "water")
-
-staryu = Pokemon("Staryu", 2, "water")
-
-ash = Trainer("Ash", [pika, bulbasaur], 3, 0)
-misty = Trainer("Misty", [starmie, squirtle, starmie2, starmie3, starmie4, starmie5, starmie6, starmie7, starmie8,
-starmie9, starmie10], 3, 0)
-
-test_trainer_1 = ash
-test_trainer_2 = misty
-test_pokemon_1= squirtle
-test_pokemon_2 = staryu
-
-# print("{name}: Spd {spd}: \tAtk: {atk}\t\tDef: {defense}".format(name=test_pokemon_1.name, 
-# spd=test_pokemon_1.speed_stat, atk=test_pokemon_1.attack_stat, defense=test_pokemon_1.defense_stat))
-# print("{name}: Spd {spd}: \tAtk: {atk}\t\tDef: {defense}".format(name=test_pokemon_2.name, 
-# spd=test_pokemon_2.speed_stat, atk=test_pokemon_2.attack_stat, defense=test_pokemon_2.defense_stat))
-#test_pokemon_1.attack(test_pokemon_2)
-print(test_pokemon_1)
-
-test_pokemon_1.level = 5
-
-print(test_pokemon_1)
-test_pokemon_1.evolve()
-print(test_pokemon_1)
-test_pokemon_1.level = 5
-print(test_pokemon_1)
-test_pokemon_1.evolve()
-print(test_pokemon_1) """
 
 #for testing
+"""
 name_1 = "Jim"
 name_2 = "Bob"
-squad_1 = [pika, charmander]#, bulbasaur]
-squad_2 = [squirtle, bulbasaur]#, starmie]
+squad_1 = [pika, charmander, bulbasaur]
+squad_2 = [squirtle, bulbasaur, starmie]
 starter_1 = 0
 starter_2 = 0
+"""
 
-
-#name_1 = input("Enter Player 1's name: ")
-#name_2 = input("Enter player 2's name: ")
+name_1 = input("-> Enter Player 1's name: ")
+name_2 = input("-> Enter player 2's name: ")
 print("Welcome Pokemon Trainers {p1} and {p2}".format(p1=name_1, p2=name_2))
-#squad_1 = pika.pokemon_selection(starting_pokemon, name_1)
-#squad_2 = pika.pokemon_selection(starting_pokemon, name_2)
-#starter_1 = pika.starting_pokemon_selection(name_1, squad_1)
-#starter_2 = pika.starting_pokemon_selection(name_2, squad_2)
+squad_1 = pika.pokemon_selection(starting_pokemon, name_1)
+squad_2 = pika.pokemon_selection(starting_pokemon, name_2)
+starter_1 = pika.starting_pokemon_selection(name_1, squad_1)
+starter_2 = pika.starting_pokemon_selection(name_2, squad_2)
 player_1 = Trainer(name_1, squad_1, starter_1)
 player_2 = Trainer(name_2, squad_2, starter_2)
 turn_counter = player_1.first_move(player_2)
