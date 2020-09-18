@@ -46,8 +46,6 @@ pokemon=self.name, lvl=self.level, type=self.type, currhp=self.current_hp, maxhp
             print("{name} was healed by {health} hp. They now have {hp}/{max_hp} hp".format(name=self.name, 
             health=heal, hp=self.current_hp, max_hp=self.max_hp))
             return True
-        elif self.current_hp == self.max_hp:
-            print("Cannot heal {pokemon} as they already have full health".format(pokemon=self.name))
         else:
             print("Cannot heal {name}. They are unconcious".format(name=self.name))
         return False
@@ -218,14 +216,15 @@ class Trainer():
             return 1
 
     def use_potion(self):
-        if self.potions <= 0:
-            print("{name} has no potions to use".format(name=self.name))
+        if self.pokemon[self.current_pokemon].current_hp == self.pokemon[self.current_pokemon].max_hp:
+            print("Cannot heal {pokemon} as they already have full health".format(
+                pokemon=self.pokemon[self.current_pokemon]))
         elif self.pokemon[self.current_pokemon].regain_health(10) is True:
             self.potions -= 1
-            #self.pokemon[self.current_pokemon].regain_health(10)
             print("{trainer} now has {potions}/3 potions remaining".format(trainer=self.name, 
             potions=self.potions))
-
+            return True
+        return False
 
     def attack_trainer(self, other_trainer):
         if self.pokemon[self.current_pokemon].attack(other_trainer.pokemon[other_trainer.current_pokemon]
@@ -233,7 +232,7 @@ class Trainer():
             other_trainer.switch_pokemon(other_trainer.current_pokemon)
             if self.unconcious_count() <= len(other_trainer.pokemon) - 2:
                 player_input = ""
-                while player_input != "yes" or player_input != "no":
+                while player_input == "":
                     player_input = input(
                         "-> {plyr}, do you want switch pokemon? {enmy} is about to send out {pokemon}!   yes/no:   ".format(
                         plyr=self.name, enmy=other_trainer.name, pokemon=other_trainer.pokemon[
@@ -244,17 +243,18 @@ class Trainer():
                         break
                     else:
                         print("{} is not a valid input".format(player_input))
+                        player_input == ""
         self.did_win(other_trainer)
 
     def switch_pokemon(self, current_index):
-        available_pokemon = []
+        display_pokemon = []
         for pokemon in self.pokemon:
-            available_pokemon.append(pokemon.name.lower())
+            display_pokemon.append(pokemon.name.lower())
         while self.current_pokemon == current_index:
             pokemon_selection = input("\n-> {name}, please choose a pokemon to switch to: ".format(
-                name=self.name) + ", ".join(available_pokemon) + "   ").lower()
-            if pokemon_selection in available_pokemon:
-                index = available_pokemon.index(pokemon_selection)
+                name=self.name) + ", ".join(display_pokemon) + "   ").lower()
+            if pokemon_selection in display_pokemon:
+                index = display_pokemon.index(pokemon_selection)
                 if index == self.current_pokemon:
                     print("{} is already your current pokemom".format(self.pokemon[self.current_pokemon]))
                 elif self.pokemon[index].unconcious is False:
@@ -294,15 +294,27 @@ class Trainer():
             
             if player_input in actions:
                 if player_input == actions[1]:
+                    if self.potions == 0:
+                        print("Cannot complete action. {name} has {count} potions remaining".format(
+                            name=self.name, count=self.potions))
+                        return False
+                    print("Using potion")
                     self.use_potion()
                 elif player_input == actions[2] or player_input == actions[3]:
+                    if self.unconcious_count() >= len(self.pokemon) - 1:
+                        print("Cannot complete action. All other pokemon are unconcious")
+                        return False
+                    print("Switching pokemon")
                     self.switch_pokemon(self.current_pokemon)
                 elif player_input == actions[0]:
                     self.attack_trainer(other_trainer)
                 elif player_input == actions[4]:
                     curr_pokemon.pokedex_information()
+                print("Turn Over")
+                return True
             else:
                 print("Sorry. {} is not a valid action. Try again".format(player_input))
+                return False
 
 
 starting_level = 1
@@ -378,20 +390,22 @@ turn_counter = player_1.first_move(player_2)
 while player_1.did_win(player_2) == False and player_2.did_win(player_1) == False:
     turn_counter += 1
     if turn_counter % 2 == 1:
-        player_1.player_turn(player_2)
+        if player_1.player_turn(player_2) == False:
+            turn_counter -= 1
     else:
-        player_2.player_turn(player_1)
+        if player_2.player_turn(player_1) == False:
+            turn_counter -= 1
+
 print("\n{opp_trainer} has no more Pokemon to send out...".format(opp_trainer=player_2.name))
 print("*------------------------------------------*")
 print("\t{name} wins the pokemon battle!".format(name=player_1.name))
 print("*------------------------------------------*")
 
 #Known Bugs
-#use_potion and switch pokemon when no potions are available ends player turn
-#-----Incorrect player input in battle menu ends player turn
-#-----Incorrect input for option to switch pokemon ends turn
+
+
 
 #Improvements
 #Pokemon types - Dict? How they're checked to see if there oppenent has an adv/disadv
 #Pokedex - Display pokemon types they are strong/ weak against
-#Damage calculation
+#Damage calculation - balance dmg dealth by pokemon
